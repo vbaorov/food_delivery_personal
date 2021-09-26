@@ -75,19 +75,29 @@
 # 추가 시나리오
 가. 기능적 요구사항
 
-#### 11. [배송원] 배송상태를 업데이트 한다
+### 11. [전화주문] 고객이 전화를 통해 상품을 주문 및 결제한다. 
 
-#### 12. [배송원] 배송상태가 업데이트 되면 자동으로 상품배송팀에 정보가 전달된다.
+### 12. [전화주문] 전화로 주문이 완료되면 자동으로 상품배송팀에 정보가 전달된다. callorderplaced (Pub/sub)
+
+### 13. [전화주문] 고객이 전화를 통해 주문을 취소한다. 
+
+### 14. [전화주문] 전화를 통한 주문취소를 상품배송팀에 알린다. 
 
 나. 비기능적 요구사항
 
-1. [설계/구현]Req/Resp : 쿠폰이 발행된 건에 한하여 배송을 시작한다. 
-#### - 배송원의 상태 업데이트가 되지 않으면 배송은 완료되지 않는다. 
+1. [설계/구현]CQRS : 고객이 주문상태를 확인 가능해야한다.
+### - 기존주문과 전화주문을 포함하여 고객은 주문상태를 확인 가능해야 한다. 
 
-5. [설계/구현/운영]circuit breaker : 배송 요청 건수가 임계치 이상 발생할 경우 Circuit Breaker 가 발동된다.
-#### - 배송원에게 하나 이상의 배달이 요구될 경우 Circuit Breaker 가 발동된다.
+2. [설계/구현]Correlation : 주문을 취소하면 -> 쿠폰을 취소하고 -> 배달을 취소 후 주문 상태 변경
+### - 전화 주문 취소시에도 쿠폰을 취소하고, 배달을 취소 후에 상태를 변경한다. 
 
+3. [설계/구현]saga : 서비스(상품팀, 상품배송팀, 마케팅팀)는 단일 서비스 내의 데이터를 처리하고, 각자의 이벤트를 발행하면 연관된 서비스에서 이벤트에 반응하여 각자의 데이터를 변경시킨다.
+### - 주문팀에서와 동일하게 전화주문팀에서 데이터가 변경되었을 때도 데이터가 변경되어야 한다.
 
+다. 기타
+
+1. [설계/구현/운영]polyglot : 상품팀과 주문팀은 서로 다른 DB를 사용하여 polyglot을 충족시킨다.
+### - 주문팀과 전화주문팀은 동일한 DB를 사용한다.
 
 
 
@@ -162,7 +172,7 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 
 ### 이벤트 도출
 
-![1](https://user-images.githubusercontent.com/88864433/133356420-db8f0cf8-a3f6-4d24-8242-e9e739401045.PNG)
+![1_EVENTSTOMING결과](https://user-images.githubusercontent.com/88864433/134791183-9d8f81f7-49a3-4326-8636-ab0d697dc4d4.PNG)
 
 ```
 1차적으로 필요하다고 생각되는 이벤트를 도출하였다 
@@ -170,7 +180,8 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 
 ### 부적격 이벤트 탈락
 
-![2](https://user-images.githubusercontent.com/88864433/133356470-ee9c68e5-50c7-45b8-8bf2-15b9ee408036.PNG)
+![2_부적격이벤트탈락](https://user-images.githubusercontent.com/88864433/134791192-8c11ea8f-df09-4122-b97d-2906bd4a6d7a.PNG)
+
 
 ```
 - 과정 중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
@@ -178,16 +189,19 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 - 주문과 결제는 동시에 이루어진다고 봐서 주문과 결제를 묶음 
 ```
 
-![3](https://user-images.githubusercontent.com/88864433/133356499-0fa6c5d6-b0ae-48a5-8e9c-06a5bac07ea1.PNG)
+![3_탈락후결과](https://user-images.githubusercontent.com/88864433/134791195-ade44b8a-470c-4c09-99b4-bc769647e464.PNG)
+
 
 ### 액터, 커맨드를 부착하여 읽기 좋게 
 
-![4-3](https://user-images.githubusercontent.com/88864433/133556941-043ef57c-4c55-49cf-9896-e17d5e11bddd.PNG)
+![4_액터커맨드를 부착하여 읽기 좋게](https://user-images.githubusercontent.com/88864433/134791199-bcaf22c5-9ddb-49f8-8ab5-948e25974614.PNG)
+
 
  
 ### 어그리게잇으로 묶기
 
-![5-3](https://user-images.githubusercontent.com/88864433/133556981-a8bfb142-2690-442d-bc92-8d89a3307472.PNG)
+![5_어그리게잇으로 묶기](https://user-images.githubusercontent.com/88864433/134791205-a4a8bee1-31f1-4627-8145-b2c62bae4441.PNG)
+
  
 ``` 
 - 고객의 주문후 배송팀의 배송관리, 마케팅의 쿠폰관리는 command와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 묶어줌
@@ -195,7 +209,8 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 
 ### 바운디드 컨텍스트로 묶기
 
-![6-3](https://user-images.githubusercontent.com/88864433/133557010-ac6b1c40-82b3-4445-8182-0feb50e4dbfb.PNG)
+![6_바운디드컨텍스트로묶기](https://user-images.githubusercontent.com/88864433/134791209-f8bcd14a-d35b-46fd-8039-b05832396c2f.PNG)
+
  
 ```
 - 도메인 서열 분리 
@@ -210,16 +225,19 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 
 ### 폴리시의 이동과 컨텍스트 맵핑 (점선은 Pub/Sub, 실선은 Req/Resp) 
 
-![8-3](https://user-images.githubusercontent.com/88864433/133557055-ab304be0-37a2-4675-bce0-425281df7301.PNG)
+![7_폴리시의이동과컨텍스트맵핑](https://user-images.githubusercontent.com/88864433/134791216-3a79a113-cde5-4479-b57a-6978a1f738b9.PNG)
+
  
 
 ### 완성된 모형
 
-![모델](https://user-images.githubusercontent.com/88864433/133361343-d99b4182-22ac-4881-aeee-19ae121723b5.PNG)
+![MSAEZ_1](https://user-images.githubusercontent.com/88864433/134791220-0258016c-87dd-4b73-b0a7-7fcb89942cde.PNG)
+
  
 ### 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 
-![주문완료검증](https://user-images.githubusercontent.com/88864433/133361542-bc0225f1-d540-42d8-ab1b-f9de9967e84a.PNG)
+![9_주문에대한검증](https://user-images.githubusercontent.com/88864433/134791226-dde1c98c-d913-453f-9b2d-31d075911ea2.PNG)
+
 
 ```
 - 고객이 물건을 주문하고 결제한다 (ok)
@@ -227,7 +245,8 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 - 마케팅팀에서 쿠폰을 발행한다 (ok) 
 - 쿠폰이 발행된 것을 확인하고 배송을 시작한다 (ok)
 ```
-![주문취소검증](https://user-images.githubusercontent.com/88864433/133361562-11bef187-a52e-4948-a429-995d76d4424d.PNG)
+![10_주문취소에대한검증](https://user-images.githubusercontent.com/88864433/134791230-c1b500e0-11ff-49fe-a28f-644e0d0300b8.PNG)
+
 
 ``` 
 - 고객이 주문을 취소할 수 있다 (ok)
@@ -237,9 +256,10 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 - 쿠폰발행이 취소되면 배송팀에서 배송을 취소한다 (ok)
 ```
 
-### 비기능 요구사항에 대한 검증 (5개가 맞는지 검토 필요)
+### 비기능 요구사항에 대한 검증 
 
-![비기능적 요구사항2](https://user-images.githubusercontent.com/88864433/133557381-ccd4b060-9193-4c38-a8a2-6cd8f846545a.PNG)
+![11_비기능적요구사항검증](https://user-images.githubusercontent.com/88864433/134791233-461f4fb3-c6d8-4a97-9fb5-a9722e283a03.PNG)
+
 
 ```
 1. [설계/구현]Req/Resp : 쿠폰이 발행된 건에 한하여 배송을 시작한다. 
@@ -249,7 +269,7 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 5. [설계/구현/운영]circuit breaker : 배송 요청 건수가 임계치 이상 발생할 경우 Circuit Breaker 가 발동된다. 
 ``` 
 
-### 헥사고날 아키텍처 다이어그램 도출 (그림 수정필요없는지 확인 필요)
+### 헥사고날 아키텍처 다이어그램 도출 (업데이트 필요) 
 
 ![분산스트림2](https://user-images.githubusercontent.com/88864433/133557657-451e67e9-400a-477c-af09-2bfd56f9a659.PNG)
  
