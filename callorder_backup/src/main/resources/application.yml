@@ -12,8 +12,8 @@ spring:
   jpa:
     properties:
       hibernate:
-        "[show_sql]": true
-        "[format_sql]": true
+        show_sql: true
+        format_sql: true
   cloud:
     stream:
       kafka:
@@ -29,7 +29,7 @@ spring:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       bindings:
         event-in:
-          group: order
+          group: callorder
           destination: eventTopic
           contentType: application/json
         event-out:
@@ -41,11 +41,10 @@ logging:
   file:
     max-history: 30
   level:
-    "[org.springframework.cloud]": debug
 
-
+    org.springframework.cloud: debug
 server:
-  port: 8082
+  port: 8084
 ---
 
 spring:
@@ -69,16 +68,15 @@ spring:
                   serde: org.apache.kafka.common.serialization.Serdes$StringSerde
       bindings:
         event-in:
-          group: order
+          group: callorder
           destination: eventTopic
           contentType: application/json
         event-out:
           destination: eventTopic
           contentType: application/json
-
 logging:
-  path: /logs/order
+  path: /logs/callorder
   file:
     max-history: 30
   level:
-    "[org.springframework.cloud]": debug
+    org.springframework.cloud: debug
