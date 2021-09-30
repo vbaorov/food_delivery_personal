@@ -24,6 +24,10 @@ spring:
           uri: http://localhost:8083
           predicates:
             - Path=/promotes/** 
+        - id: callorder
+          uri: http://localhost:8085
+          predicates:
+            - Path=/callorders/**            
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -59,6 +63,10 @@ spring:
           uri: http://marketing:8080
           predicates:
             - Path=/promotes/** 
+        - id: callorder
+          uri: http://order:8080
+          predicates:
+            - Path=/callorders/**            
       globalcors:
         corsConfigurations:
           '[/**]':

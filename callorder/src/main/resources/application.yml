@@ -45,7 +45,7 @@ logging:
 
 
 server:
-  port: 8084
+  port: 8085
 ---
 
 spring:
