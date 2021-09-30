@@ -36,8 +36,8 @@ spec:
             periodSeconds: 5
             failureThreshold: 5
           volumeMounts:
-            - name: volume
-              mountPath: /logs
+          - name: volume
+            mountPath: /logs
         volumes:
         - name: volume
           persistentVolumeClaim:
