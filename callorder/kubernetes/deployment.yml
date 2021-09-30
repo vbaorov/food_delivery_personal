@@ -37,7 +37,7 @@ spec:
             failureThreshold: 5
           volumeMounts:
           - name: volume
-            mountPath: \logs
+            - mountPath: /logs
         volumes:
         - name: volume
           persistentVolumeClaim:
