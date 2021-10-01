@@ -603,4 +603,51 @@ Gateway 포트인 8085 (callorder)포트를 통해서 주문접수를 생성시�
 
 ![get_stockdelivery](https://user-images.githubusercontent.com/88864433/135474090-af36b19f-c33d-4a31-8ff6-5a8efa57a905.PNG)
 
+## Zero-downtime deploy (Readiness Probe)
+
+
+```
+          readinessProbe:
+            httpGet:
+              path: '/actuator/healthfai'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+```
+
+
+
+
+## Self-healing (Liveness Probe)
+
+- port 및 정보를 잘못된 값으로 변경하여 yml 적용
+
+```
+      containers:
+        - name: callorder
+          image: 879772956301.dkr.ecr.ca-central-1.amazonaws.com/callorder:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/failed'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+```
+- 적용전 
+![kube 정상](https://user-images.githubusercontent.com/88864433/135574419-c729bd52-459f-451e-a9b4-17fa4e0e48e2.PNG)
+
+- 명령어 
+
+![kube명령어](https://user-images.githubusercontent.com/88864433/135574484-4205e009-37e1-448a-9b78-ce77185d4e2d.PNG)
+
+- 적용후 
+
+
+
 
