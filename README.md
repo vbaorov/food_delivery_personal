@@ -581,9 +581,6 @@ OrderStatusViewHandler.java
          stockDeliveryRepository.save(delivery);
 ```
 
-# CQRS (팀과제에서 구현되어 있어 제외) 
-
-# 폴리글랏 퍼시스턴스 (팀과제에서 구현되어 있어 제외)
 
 
 # API 게이트웨이
