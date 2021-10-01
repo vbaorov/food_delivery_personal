@@ -12,15 +12,7 @@
   - [구현:](#구현)
     - [DDD 의 적용](#DDD의-적용)
     - [비동기식 호출과 Eventual Consistency](#비동기식-호출과-Eventual-Consistency) 
-    - [폴리글랏 퍼시스턴스](#폴리글랏-퍼시스턴스)
     - [API 게이트웨이](#API-게이트웨이)
-  - [운영](#운영)
-    - [Deploy/Pipeline](#deploypipeline)
-    - [동기식 호출 / Circuit Breaker / 장애격리](#동기식-호출-circuit-breaker-장애격리)
-    - [Autoscale (HPA)](#autoscale-(hpa))
-    - [Zero-downtime deploy (Readiness Probe)](#zerodowntime-deploy-(readiness-Probe))
-    - [Self-healing (Liveness Probe)](#self-healing-(liveness-probe))
-    - [운영유연성](#운영유연성)
 
 
 
