@@ -693,7 +693,8 @@ spec:
               port: 8080
 ```
 - 적용 결과 
-![deployment](https://user-images.githubusercontent.com/88864433/135572903-00ab9b1c-60c8-41f2-9bb4-8a7f597ddb81.PNG)
+![deploy_2](https://user-images.githubusercontent.com/88864433/135581145-3e557214-0c20-4d9b-a5c1-41e2df0fb581.PNG)
+
 
 
 
