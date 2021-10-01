@@ -418,7 +418,7 @@ public interface CallOrderRepository extends PagingAndSortingRepository<CallOrde
 
 ```
 [시나리오1]
-http POST http://localhost:8085/callorders address=“England” productId=“2001” payStatus=“Y” phoneNo=“01075722744” productName=“gram” productPrice=9000000 qty=1 userId=“gentleman” username=“TRUMP”
+http POST http://localhost:8085/callorders address=“England” productId=“2001” payStatus=“Y” phoneNo=“01055756744” productName=“gram” productPrice=9000000 qty=1 userId=“gentleman” username=“TRUMP”
 
 [시나리오2] 
 http GET http://localhost:8081/stockDeliveries
