@@ -616,7 +616,13 @@ Gateway 포트인 8085 (callorder)포트를 통해서 주문접수를 생성시�
             periodSeconds: 5
             failureThreshold: 10
 ```
+v1 적용된 상태에서 v2 적용 진행 
 
+![readiness 명령어](https://user-images.githubusercontent.com/88864433/135580320-f03b4222-8730-4726-bab6-cf2d5908f3d7.PNG)
+
+결과 
+
+![readiness 결과](https://user-images.githubusercontent.com/88864433/135580355-df8250c7-f791-487e-a7b8-36a1cc3b8247.PNG)
 
 
 
@@ -633,8 +639,8 @@ Gateway 포트인 8085 (callorder)포트를 통해서 주문접수를 생성시�
           readinessProbe:
             httpGet:
               path: '/actuator/failed'
-              port: 8080
-            initialDelaySeconds: 10
+              port: 8088
+            initialDelaySeconds: 5
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 10
