@@ -603,6 +603,101 @@ Gateway 포트인 8085 (callorder)포트를 통해서 주문접수를 생성시�
 
 ![get_stockdelivery](https://user-images.githubusercontent.com/88864433/135474090-af36b19f-c33d-4a31-8ff6-5a8efa57a905.PNG)
 
+# 운영 
+
+## Deploy / Pipeline
+
+- deployment.yml파일을 통해 deploy와 service생성을 진행함
+
+```
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productdelivery
+  labels:
+    app: productdelivery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productdelivery
+  template:
+    metadata:
+      labels:
+        app: productdelivery
+    spec:
+      containers:
+        - name: productdelivery
+          image: 879772956301.dkr.ecr.ca-central-1.amazonaws.com/productdelivery:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+... 생략 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+  labels:
+    app: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: 879772956301.dkr.ecr.ca-central-1.amazonaws.com/order:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+.. 생략 
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: callorder
+  labels:
+    app: callorder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: callorder
+  template:
+    metadata:
+      labels:
+        app: callorder
+    spec:
+      containers:
+        - name: callorder
+          image: 879772956301.dkr.ecr.ca-central-1.amazonaws.com/callorder:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+```
+- 적용 결과 
+![deployment](https://user-images.githubusercontent.com/88864433/135572903-00ab9b1c-60c8-41f2-9bb4-8a7f597ddb81.PNG)
+
+
+
+
 ## Zero-downtime deploy (Readiness Probe)
 
 
@@ -654,6 +749,7 @@ v1 적용된 상태에서 v2 적용 진행
 
 - 적용후 
 
+![liveness 겨로가](https://user-images.githubusercontent.com/88864433/135580611-7ecf9145-cc44-4069-ac83-fd02fb153b94.PNG)
 
 
 
