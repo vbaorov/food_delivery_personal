@@ -589,10 +589,10 @@ OrderStatusViewHandler.java
 - API GW를 통하여 마이크로 서비스들의 진입점을 통일할 수 있는가?
 
 - application.yml
-```
+
 ![api게이트웨이](https://user-images.githubusercontent.com/88864433/135473378-c8f49a7f-3ac9-4ea1-b1db-aa302f8b1789.PNG)
 
-```
+
 
 Gateway의 application.yml이며, 마이크로서비스들의 진입점을 세팅하여 URI Path에 따라서 각 마이크로서비스로 라우팅되도록 설정되었다.
 Gateway 포트인 8085 (callorder)포트를 통해서 주문접수를 생성시켜 8081(배송팀) 에서 정상 동작함을 확인하였다. 
