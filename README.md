@@ -260,7 +260,7 @@ https://www.msaez.io/#/storming/7znb05057kPWQo1TAWCkGM0O2LJ3/5843d1078a788a01aa8
 
 ### 헥사고날 아키텍처 다이어그램 도출 (업데이트 필요) 
 
-![12_헥사고날](https://user-images.githubusercontent.com/88864433/135393741-d717527b-f96c-4fe7-866b-53c6f69cd638.PNG)
+![헥사고날_수정](https://user-images.githubusercontent.com/88864433/135560456-5015eb33-880d-4e31-97c1-120dd4b11c0b.PNG)
  
 
 ```
